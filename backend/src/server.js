@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+const userRoutes = require('./routes/userRoutes');
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -21,6 +22,9 @@ app.get('/', (req, res) => {
 app.get('/api/data', (req, res) => {
     res.json({ message: 'Hello from backend!', timestamp: new Date() });
 });
+
+// API Routes
+app.use('/api/users', userRoutes);
 
 app.listen(PORT, () => {
     console.log(`Backend server is running on port ${PORT}`);
