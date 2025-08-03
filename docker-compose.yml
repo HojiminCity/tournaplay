@@ -13,7 +13,7 @@ services:
     env_file:
       - ./backend/.env # อ่านค่า Environment Variables จากไฟล์ .env
     depends_on:
-      - mongo # ให้รอจนกว่า service 'mongo' จะพร้อมใช้งาน
+      - mysql # ให้รอจนกว่า service 'mongo' จะพร้อมใช้งาน
 
   # Service ของ Fronted
   frontend:
@@ -29,13 +29,20 @@ services:
     
   # Service ของ Database
   mongo:
-    image: mongo:latest # ใช้ Official Image ของ MongoDB
+    image: mysql:8.4 # ใช้ Official Image ของ MongoDB
     container_name: tournaplay-mongo
     ports:
-      - "27017:27017" # ค่า Defalut ของ mongo
+      - "3306:3306" # ค่า Defalut 
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: tournaplay
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
     volumes:
-      - mongo-data:/data/db # สร้าง mongo-data เพื่อเก็บข้อมูลถาวร
+      - mysql-data:/var/lib/mysql
+      - ./database.sql:/docker-entrypoint-initdb.d/init.sql # สร้าง mongo-data เพื่อเก็บข้อมูลถาวร
+    command: --default-authentication-plugin=mysql_native_password
 
 # กำหนด Volumes ที่จะใช้
 volumes:
-  mongo-data:
+  mysql-data:
