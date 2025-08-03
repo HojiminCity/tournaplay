@@ -6,6 +6,7 @@ const cors = require('cors');
 // Import Routes
 const userRoutes = require('./routes/userRoutes');
 const gameRoutes = require('./routes/gameRoutes');
+const teamRoutes = require('./routes/teamRoutes');
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api/users', userRoutes);
 app.use('/api/games', gameRoutes);
+app.use('/api/teams', teamRoutes);
 
 // Test route
 app.get('/api/data', (req, res) => {
