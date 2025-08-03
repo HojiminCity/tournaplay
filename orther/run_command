@@ -1,0 +1,3 @@
+docker-compose up // ใช้รันทั้งหน้าบ้านหลังบ้านพร้อมกัน
+
+docker-compose up --build //ใช้ตอนแก้ไขพวก config

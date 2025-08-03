@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  #services ของ Backend
+  backend:
+    build: ./backend #สร้าง Image จาก Dockerfile ในโฟลเดอร์ backend
+    container_name: tournaplay-backend
+    ports:
+      - "5000:5000" #Map port 5000 ของเครื่องเรากับ Port 5000 ใน Container
+    volumes:
+      - ./backend:/app # Mount โฟลเดอร์ backend ของเราเข้าไปใน  /app ของ Container
+      - /app/node_modules # ไม่ mount node_modules เพื่อใช้ที่ติดตั้งใน container
+    env_file:
+      - ./backend/.env # อ่านค่า Environment Variables จากไฟล์ .env
+    depends_on:
+      - mongo # ให้รอจนกว่า service 'mongo' จะพร้อมใช้งาน
+
+  # Service ของ Fronted
+  frontend:
+    build: ./frontend # สร้าง Image 
+    container_name: tournaplay-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app 
+      - /app/node_modules
+    depends_on:
+      - backend # รอให้ Backend พร้อมทำงานก่อน
+    
+  # Service ของ Database
+  mongo:
+    image: mongo:latest # ใช้ Official Image ของ MongoDB
+    container_name: tournaplay-mongo
+    ports:
+      - "27017:27017" # ค่า Defalut ของ mongo
+    volumes:
+      - mongo-data:/data/db # สร้าง mongo-data เพื่อเก็บข้อมูลถาวร
+
+# กำหนด Volumes ที่จะใช้
+volumes:
+  mongo-data:
