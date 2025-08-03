@@ -13,4 +13,10 @@ router.delete('/:id', gameController.deleteGame);      // DELETE /api/games/:id
 router.get('/:id/heroes', gameController.getGameHeroes); // GET /api/games/:id/heroes
 router.post('/:id/heroes', gameController.addHero);      // POST /api/games/:id/heroes
 
+// Skill Routes
+router.get('/:gameId/heroes/:heroId/skills', gameController.getHeroSkills);        // GET skills
+router.post('/:gameId/heroes/:heroId/skills', gameController.addSkill);           // POST skill
+router.put('/:gameId/heroes/:heroId/skills/:skillId', gameController.updateSkill); // PUT skill
+router.delete('/:gameId/heroes/:heroId/skills/:skillId', gameController.deleteSkill); // DELETE skill
+
 module.exports = router;

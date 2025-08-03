@@ -220,3 +220,189 @@ exports.getGameHeroes = async (req, res) => {
     });
   }
 };
+
+// POST /api/games/:gameId/heroes/:heroId/skills - เพิ่ม Skill ให้ Hero
+exports.addSkill = async (req, res) => {
+  try {
+    const { gameId, heroId } = req.params;
+    const { name, description, imageUrl } = req.body;
+    
+    const game = await Game.findById(gameId);
+    if (!game) {
+      return res.status(404).json({
+        success: false,
+        message: 'Game not found'
+      });
+    }
+
+    const hero = game.heroes.id(heroId);
+    if (!hero) {
+      return res.status(404).json({
+        success: false,
+        message: 'Hero not found'
+      });
+    }
+
+    // ตรวจสอบว่า skill ซ้ำไหม
+    const existingSkill = hero.skills.find(skill => skill.name === name);
+    if (existingSkill) {
+      return res.status(400).json({
+        success: false,
+        message: 'Skill already exists for this hero'
+      });
+    }
+
+    const newSkill = {
+      name,
+      description,
+      imageUrl
+    };
+
+    hero.skills.push(newSkill);
+    await game.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Skill added successfully',
+      data: newSkill
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: 'Failed to add skill',
+      error: error.message
+    });
+  }
+};
+
+// GET /api/games/:gameId/heroes/:heroId/skills - ดู Skills ของ Hero
+exports.getHeroSkills = async (req, res) => {
+  try {
+    const { gameId, heroId } = req.params;
+    
+    const game = await Game.findById(gameId);
+    if (!game) {
+      return res.status(404).json({
+        success: false,
+        message: 'Game not found'
+      });
+    }
+
+    const hero = game.heroes.id(heroId);
+    if (!hero) {
+      return res.status(404).json({
+        success: false,
+        message: 'Hero not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      heroName: hero.name,
+      count: hero.skills.length,
+      data: hero.skills
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};
+
+// PUT /api/games/:gameId/heroes/:heroId/skills/:skillId - แก้ไข Skill
+exports.updateSkill = async (req, res) => {
+  try {
+    const { gameId, heroId, skillId } = req.params;
+    const { name, description, imageUrl } = req.body;
+    
+    const game = await Game.findById(gameId);
+    if (!game) {
+      return res.status(404).json({
+        success: false,
+        message: 'Game not found'
+      });
+    }
+
+    const hero = game.heroes.id(heroId);
+    if (!hero) {
+      return res.status(404).json({
+        success: false,
+        message: 'Hero not found'
+      });
+    }
+
+    const skill = hero.skills.id(skillId);
+    if (!skill) {
+      return res.status(404).json({
+        success: false,
+        message: 'Skill not found'
+      });
+    }
+
+    // อัพเดท skill
+    if (name) skill.name = name;
+    if (description) skill.description = description;
+    if (imageUrl !== undefined) skill.imageUrl = imageUrl;
+
+    await game.save();
+
+    res.json({
+      success: true,
+      message: 'Skill updated successfully',
+      data: skill
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: 'Failed to update skill',
+      error: error.message
+    });
+  }
+};
+
+// DELETE /api/games/:gameId/heroes/:heroId/skills/:skillId - ลบ Skill
+exports.deleteSkill = async (req, res) => {
+  try {
+    const { gameId, heroId, skillId } = req.params;
+    
+    const game = await Game.findById(gameId);
+    if (!game) {
+      return res.status(404).json({
+        success: false,
+        message: 'Game not found'
+      });
+    }
+
+    const hero = game.heroes.id(heroId);
+    if (!hero) {
+      return res.status(404).json({
+        success: false,
+        message: 'Hero not found'
+      });
+    }
+
+    const skill = hero.skills.id(skillId);
+    if (!skill) {
+      return res.status(404).json({
+        success: false,
+        message: 'Skill not found'
+      });
+    }
+
+    hero.skills.pull(skillId);
+    await game.save();
+
+    res.json({
+      success: true,
+      message: 'Skill deleted successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to delete skill',
+      error: error.message
+    });
+  }
+};
