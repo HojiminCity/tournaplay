@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const tournamentController = require('../controllers/tournamentController');
+const matchController = require('../controllers/matchController');
 const { authenticate, authorize } = require('../middleware/authMiddleware');
 
 // Public Routes (ไม่ต้อง login)
 router.get('/', tournamentController.getAllTournaments);           // GET /api/tournaments
 router.get('/:id', tournamentController.getTournamentById);        // GET /api/tournaments/:id
 router.get('/:id/registrations', tournamentController.getTournamentRegistrations); // GET /api/tournaments/:id/registrations
+router.get('/:id/matches', matchController.getTournamentMatches);  // GET /api/tournaments/:id/matches
 
 // Protected Routes (ต้อง login)
 router.post('/', authenticate, tournamentController.createTournament);           // POST /api/tournaments
