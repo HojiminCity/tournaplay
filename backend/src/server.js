@@ -8,6 +8,7 @@ const userRoutes = require('./routes/userRoutes');
 const gameRoutes = require('./routes/gameRoutes');
 const teamRoutes = require('./routes/teamRoutes');
 const authRoutes = require('./routes/authRoutes');
+const tournamentRoutes = require('./routes/tournamentRoutes');
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/games', gameRoutes);
 app.use('/api/teams', teamRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/tournaments', tournamentRoutes);
 
 // Test route
 app.get('/api/data', (req, res) => {
