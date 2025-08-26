@@ -5,7 +5,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home />}  />
         {/* เพิ่มหน้าใหม่ได้ที่นี่ */}
       </Routes>
     </Router>
