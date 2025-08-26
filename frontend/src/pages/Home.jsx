@@ -14,7 +14,7 @@ function Home() {
     <div>
       <h1>TOURNAPLAY Docker on Windows</h1>
       <p>Data from backend:</p>
-      <pre>{data ? JSON.stringify(data, null, 2) : "Loading..."}</pre>
+      <pre>{data ? JSON.stringify(data, null, 2) : "Loading....."}</pre>
     </div>
   );
 }
